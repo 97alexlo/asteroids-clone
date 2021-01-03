@@ -2,6 +2,7 @@ package sample;
 
 import javafx.animation.*;
 import javafx.application.Application;
+import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
@@ -17,11 +18,21 @@ public class Main extends Application {
     public static final int WIDTH = 500;
     public static final int HEIGHT = 300;
     private List<Integer> scores = new ArrayList();
+    private int count = 0;
 
     @Override
     public void start(Stage stage) throws Exception {
         Pane pane = new Pane();
+        Scene scene = new Scene(pane);
         pane.setPrefSize(WIDTH, HEIGHT);
+        stage.setTitle("Space Shooter");
+        setGame(pane, stage, scene);
+        stage.setScene(pane.getScene());
+        stage.show();
+    }
+
+    public void setGame(Pane pane, Stage stage, Scene scene) {
+
         Text text = new Text(10, 20, "Points: 0");
         pane.getChildren().add(text);
         AtomicInteger points = new AtomicInteger();
@@ -39,8 +50,6 @@ public class Main extends Application {
 
         pane.getChildren().add(ship.getCharacter());
         asteroids.forEach(asteroid -> pane.getChildren().add(asteroid.getCharacter()));
-
-        Scene scene = new Scene(pane);
 
         // use a hashtable to keep a record of pressed keys
         // true if key is pressed, false otherwise
@@ -94,7 +103,8 @@ public class Main extends Application {
                     if (ship.collide(asteroid)) {
                         stop();
                         scores.add(points.get());
-                        stage.hide();
+                        pane.getChildren().clear();
+                        showMenu(pane, stage, scene);
                     }
                 });
 
@@ -128,10 +138,6 @@ public class Main extends Application {
 
             }
         }.start();
-
-        stage.setTitle("Space Shooter");
-        stage.setScene(scene);
-        stage.show();
     }
 
     // remove collided projectiles/asteroids
@@ -144,9 +150,30 @@ public class Main extends Application {
                 .collect(Collectors.toList()));
     }
 
-    public void reset() {
-
+    public void reset(Pane pane) {
+        pane.getChildren().clear();
     }
+
+    public void showMenu(Pane pane, Stage prevStage, Scene prevScene) {
+        Stage stage = new Stage();
+        Button viewGraph = new Button("View progress (Graph)");
+        Button playAgain = new Button("Play again");
+        playAgain.setOnAction(actionEvent -> {
+            stage.close();
+            setGame(pane, prevStage, prevScene);
+        });
+        Label currentScore = new Label("Your score: " + String.valueOf(scores.get(count)));
+        Label highScore = new Label("High score: " + String.valueOf(Collections.max(scores)));
+        count++;
+        VBox vb = new VBox(viewGraph, playAgain, currentScore, highScore);
+        vb.setAlignment(Pos.CENTER);
+        vb.setPadding(new Insets(15));
+        vb.setSpacing(10);
+        Scene scene = new Scene(vb, 320, 150);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
