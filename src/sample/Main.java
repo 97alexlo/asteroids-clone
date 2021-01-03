@@ -2,7 +2,6 @@ package sample;
 
 import javafx.animation.*;
 import javafx.application.Application;
-import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
@@ -17,7 +16,7 @@ public class Main extends Application {
 
     public static final int WIDTH = 500;
     public static final int HEIGHT = 300;
-    private List<Integer> scores = new ArrayList<Integer>();
+    private List<Integer> scores = new ArrayList();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -25,12 +24,6 @@ public class Main extends Application {
         pane.setPrefSize(WIDTH, HEIGHT);
         Text text = new Text(10, 20, "Points: 0");
         pane.getChildren().add(text);
-        Button reset = new Button("Play again");
-        VBox vb = new VBox();
-        vb.setAlignment(Pos.CENTER);
-        vb.getChildren().add(reset);
-        reset.setVisible(false);
-        pane.getChildren().add(vb);
         AtomicInteger points = new AtomicInteger();
 
         Ship ship = new Ship(WIDTH / 2, HEIGHT / 2); // create triangular ship
@@ -101,7 +94,7 @@ public class Main extends Application {
                     if (ship.collide(asteroid)) {
                         stop();
                         scores.add(points.get());
-                        reset.setVisible(true);
+                        stage.hide();
                     }
                 });
 

@@ -3,8 +3,6 @@ package sample;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.*;
 
-import java.awt.geom.*;
-
 // use an abstract class for Ship and Asteroids to be subclasses
 public abstract class Character {
 
