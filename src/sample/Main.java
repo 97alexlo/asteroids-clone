@@ -27,12 +27,22 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Pane pane = new Pane();
-        Scene scene = new Scene(pane);
-        pane.setPrefSize(WIDTH, HEIGHT);
         stage.setTitle("Space Shooter");
-        setGame(pane, stage, scene);
-        stage.setScene(pane.getScene());
+        VBox vb = new VBox();
+        Button playGame = new Button("Play");
+        playGame.setOnAction(actionEvent -> {
+            stage.close();
+            initGame(stage);
+        });
+        Label title = new Label("Space Shooter");
+        vb.setPrefSize(WIDTH, HEIGHT);
+        vb.setAlignment(Pos.CENTER);
+        vb.setPadding(new Insets(20));
+        vb.setSpacing(50);
+        vb.getChildren().addAll(title, playGame);
+        Scene scene = new Scene(vb);
+        stage.setTitle("Space Shooter");
+        stage.setScene(scene);
         stage.show();
     }
 
@@ -45,6 +55,7 @@ public class Main extends Application {
         stage.setScene(pane.getScene());
         stage.show();
     }
+
     public void setGame(Pane pane, Stage stage, Scene scene) {
 
         Text text = new Text(10, 20, "Points: 0");
@@ -172,7 +183,7 @@ public class Main extends Application {
         Stage stage = new Stage();
 
         // view progress graph button
-        Button viewGraph = new Button("Progress graph");
+        Button viewGraph = new Button("Score Analysis Graph");
         viewGraph.setOnAction(actionEvent -> {
             stage.hide();
             showGraph(stage);
