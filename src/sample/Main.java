@@ -202,7 +202,7 @@ public class Main extends Application {
         vb.setAlignment(Pos.CENTER);
         vb.setPadding(new Insets(15));
         vb.setSpacing(10);
-        Scene scene = new Scene(vb, 320, 150);
+        Scene scene = new Scene(vb, 320, 200);
         stage.setScene(scene);
         stage.show();
     }
@@ -273,23 +273,29 @@ public class Main extends Application {
         gp.setGridLinesVisible(true);
         gp.setAlignment(Pos.CENTER);
         gp.setPadding(new Insets(10));
-        VBox vb = new VBox();
-        VBox vb2 = new VBox();
-        vb2.setAlignment(Pos.BOTTOM_CENTER);
+        gp.getColumnConstraints().add(new ColumnConstraints(25));
+        gp.getColumnConstraints().add(new ColumnConstraints(70));
+
+        // fill in leaderboard
+        for(int i = 0; i < 10; i++) {
+            gp.add(new Label(String.valueOf(i+1) + ". "), 0, i);
+        }
         for(int i = 0; i < sortedNumbers.size(); i++) {
-            gp.add(new Label(String.valueOf(sortedNumbers.get(i))), 0, i+1);
+            gp.add(new Label(" " + String.valueOf(sortedNumbers.get(i))), 1, i);
         }
 
+        // return to menu
         Button goBack = new Button("Menu");
         goBack.setOnAction(actionEvent -> {
             stage.close();
             menuStage.show();
         });
 
-        vb.setAlignment(Pos.TOP_CENTER);
-        vb.getChildren().addAll(new Label("Leaderboard"), gp);
-        vb2.getChildren().addAll(vb, goBack);
-        Scene view = new Scene(vb2, 400, 400);
+        VBox vb = new VBox();
+        vb.setAlignment(Pos.CENTER);
+        vb.getChildren().addAll(new Label("Leaderboard"), gp, goBack);
+
+        Scene view = new Scene(vb, 200, 300);
         stage.setScene(view);
         stage.show();
     }
