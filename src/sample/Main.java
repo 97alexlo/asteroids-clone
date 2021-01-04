@@ -2,8 +2,10 @@ package sample;
 
 import javafx.animation.*;
 import javafx.application.Application;
+import javafx.event.*;
 import javafx.geometry.*;
 import javafx.scene.Scene;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
@@ -19,6 +21,9 @@ public class Main extends Application {
     public static final int HEIGHT = 300;
     private List<Integer> scores = new ArrayList();
     private int count = 0;
+    CategoryAxis xAxis = new CategoryAxis();
+    NumberAxis yAxis = new NumberAxis();
+    LineChart<String, Number> lineChart = new LineChart<String, Number>(xAxis, yAxis);
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -31,6 +36,15 @@ public class Main extends Application {
         stage.show();
     }
 
+    public void initGame(Stage stage) {
+        Pane pane = new Pane();
+        Scene scene = new Scene(pane);
+        pane.setPrefSize(WIDTH, HEIGHT);
+        stage.setTitle("Space Shooter");
+        setGame(pane, stage, scene);
+        stage.setScene(pane.getScene());
+        stage.show();
+    }
     public void setGame(Pane pane, Stage stage, Scene scene) {
 
         Text text = new Text(10, 20, "Points: 0");
@@ -103,7 +117,6 @@ public class Main extends Application {
                     if (ship.collide(asteroid)) {
                         stop();
                         scores.add(points.get());
-                        pane.getChildren().clear();
                         showMenu(pane, stage, scene);
                     }
                 });
@@ -154,18 +167,38 @@ public class Main extends Application {
         pane.getChildren().clear();
     }
 
-    public void showMenu(Pane pane, Stage prevStage, Scene prevScene) {
+    // menu - play again, view progress graph, or view scoreboard
+    public void showMenu(Pane gamePane, Stage gameStage, Scene gameScene) {
         Stage stage = new Stage();
-        Button viewGraph = new Button("View progress (Graph)");
+
+        // view progress graph button
+        Button viewGraph = new Button("Progress graph");
+        viewGraph.setOnAction(actionEvent -> {
+            stage.hide();
+            showGraph(stage);
+        });
+
+        // view scoreboard
+        Button viewScoreboard = new Button("Leaderboard");
+        viewScoreboard.setOnAction(actionEvent -> {
+            stage.hide();
+            showLeaderboard(stage);
+        });
+
+        // reset game button
         Button playAgain = new Button("Play again");
         playAgain.setOnAction(actionEvent -> {
             stage.close();
-            setGame(pane, prevStage, prevScene);
+            gamePane.getChildren().clear();
+            setGame(gamePane, gameStage, gameScene);
         });
+
+        // display current and highest score
         Label currentScore = new Label("Your score: " + String.valueOf(scores.get(count)));
         Label highScore = new Label("High score: " + String.valueOf(Collections.max(scores)));
-        count++;
-        VBox vb = new VBox(viewGraph, playAgain, currentScore, highScore);
+        count++; // keep track of current score/element
+
+        VBox vb = new VBox(currentScore, highScore, viewGraph, viewScoreboard, playAgain);
         vb.setAlignment(Pos.CENTER);
         vb.setPadding(new Insets(15));
         vb.setSpacing(10);
@@ -174,6 +207,92 @@ public class Main extends Application {
         stage.show();
     }
 
+    // get mean of scores
+    public static double meanScores(List<Integer> list) {
+        return list
+                .stream()
+                .mapToInt(number -> number)
+                .average()
+                .getAsDouble();
+    }
+
+    // view score progress chart
+    public void showGraph(Stage menuStage) {
+        Stage stage = new Stage();
+        VBox vb = new VBox();
+        HBox hb = new HBox();
+
+        // get score calculations
+        Label avgScore = new Label("Mean score: " + String.format("%.2f", meanScores(scores)));
+        Label minScore = new Label("Minimum score: " + Collections.min(scores));
+        Label maxScore = new Label("Maximum score: " + Collections.max(scores));
+
+        // return to menu
+        Button goBack = new Button("Menu");
+        goBack.setOnAction(actionEvent -> {
+            stage.close();
+            menuStage.show();
+        });
+
+        hb.getChildren().addAll(avgScore, minScore, maxScore);
+        hb.setAlignment(Pos.CENTER);
+        hb.setSpacing(10);
+        hb.setPadding(new Insets(10));
+
+        vb.setPadding(new Insets(10));
+        vb.setAlignment(Pos.CENTER);
+
+        // set the titles for the axes
+        xAxis.setLabel("Tries");
+        yAxis.setLabel("Score (points)");
+        yAxis.setTickUnit(1);
+
+        // make graph
+        XYChart.Series series = new XYChart.Series();
+        for(int i = 0; i < scores.size(); i++) {
+            series.getData().add(new XYChart.Data(String.valueOf(i+1), scores.get(i)));
+        }
+        lineChart.getData().add(series);
+        lineChart.setLegendVisible(false);
+        lineChart.setTitle("Score Progress Analysis");
+
+        vb.getChildren().addAll(lineChart, hb, goBack);
+        // display chart
+        Scene view = new Scene(vb, 600, 400);
+        stage.setScene(view);
+        stage.show();
+    }
+
+    // show leaderboard
+    public void showLeaderboard(Stage menuStage) {
+        List<Integer> sortedNumbers = new ArrayList<>(scores);
+        Collections.sort(scores, Collections.reverseOrder());
+        Stage stage = new Stage();
+
+        GridPane gp = new GridPane();
+        gp.setGridLinesVisible(true);
+        gp.setAlignment(Pos.CENTER);
+        gp.setPadding(new Insets(10));
+        VBox vb = new VBox();
+        VBox vb2 = new VBox();
+        vb2.setAlignment(Pos.BOTTOM_CENTER);
+        for(int i = 0; i < sortedNumbers.size(); i++) {
+            gp.add(new Label(String.valueOf(sortedNumbers.get(i))), 0, i+1);
+        }
+
+        Button goBack = new Button("Menu");
+        goBack.setOnAction(actionEvent -> {
+            stage.close();
+            menuStage.show();
+        });
+
+        vb.setAlignment(Pos.TOP_CENTER);
+        vb.getChildren().addAll(new Label("Leaderboard"), gp);
+        vb2.getChildren().addAll(vb, goBack);
+        Scene view = new Scene(vb2, 400, 400);
+        stage.setScene(view);
+        stage.show();
+    }
     public static void main(String[] args) {
         launch(args);
     }

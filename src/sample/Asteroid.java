@@ -1,12 +1,14 @@
 package sample;
 
+import javafx.scene.paint.*;
+
 import java.util.*;
 
 public class Asteroid extends Character {
     private double rotationalMovement;
 
     public Asteroid(int x, int y) {
-        super(new PolygonMaker().makePolygon(), x, y);
+        super(new PolygonMaker().makePolygon(), x, y, Color.SADDLEBROWN);
 
         Random rand = new Random();
         // asteroids are rotated to a random direction

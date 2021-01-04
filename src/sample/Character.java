@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.geometry.Point2D;
+import javafx.scene.paint.*;
 import javafx.scene.shape.*;
 
 // use an abstract class for Ship and Asteroids to be subclasses
@@ -11,8 +12,9 @@ public abstract class Character {
     private Boolean alive = true;
     private Boolean outOfBounds = false;
 
-    public Character(Polygon polygon, int x, int y) {
+    public Character(Polygon polygon, int x, int y, Color color) {
         character = polygon;
+        character.setFill(color);
         character.setTranslateX(x);
         character.setTranslateY(y);
 

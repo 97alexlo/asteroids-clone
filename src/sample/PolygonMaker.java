@@ -1,6 +1,5 @@
 package sample;
 
-import java.awt.*;
 import java.util.Random;
 
 import javafx.scene.paint.Color;
@@ -14,7 +13,6 @@ public class PolygonMaker {
 
         // can reuse c and s by multiplying by -1
         Polygon polygon = new Polygon();
-        polygon.setFill(Color.SADDLEBROWN);
         double c = Math.cos(Math.PI * 1 / 4);
         double s = Math.sin(Math.PI * 1 / 4);
 
