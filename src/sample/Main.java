@@ -30,16 +30,20 @@ public class Main extends Application {
         stage.setTitle("Space Shooter");
         VBox vb = new VBox();
         Button playGame = new Button("Play");
+        playGame.setLineSpacing(20);
+
         playGame.setOnAction(actionEvent -> {
             stage.close();
             initGame(stage);
         });
         Label title = new Label("Space Shooter");
-        vb.setPrefSize(WIDTH, HEIGHT);
+        Label subtitle = new Label("An implementation of the classic arcade game: Asteroids");
+        title.setFont(new Font("Cambria", 30));
+        vb.setPrefSize(400, 200);
         vb.setAlignment(Pos.CENTER);
         vb.setPadding(new Insets(20));
-        vb.setSpacing(50);
-        vb.getChildren().addAll(title, playGame);
+        vb.setSpacing(15);
+        vb.getChildren().addAll(title, subtitle, playGame);
         Scene scene = new Scene(vb);
         stage.setTitle("Space Shooter");
         stage.setScene(scene);
@@ -67,7 +71,7 @@ public class Main extends Application {
         List<Projectile> projectiles = new ArrayList<>(); // 0 projectiles at the start of game
 
         // create 5 asteroids of random sizes
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             Random rand = new Random();
             Asteroid asteroid = new Asteroid(rand.nextInt(WIDTH), rand.nextInt(HEIGHT));
             asteroids.add(asteroid);
@@ -183,7 +187,8 @@ public class Main extends Application {
         Stage stage = new Stage();
 
         // view progress graph button
-        Button viewGraph = new Button("Score Analysis Graph");
+        Button viewGraph = new Button("Score Analysis Chart");
+        viewGraph.setStyle("-fx-font-size:15");
         viewGraph.setOnAction(actionEvent -> {
             stage.hide();
             showGraph(stage);
@@ -191,6 +196,7 @@ public class Main extends Application {
 
         // view scoreboard
         Button viewScoreboard = new Button("Leaderboard");
+        viewScoreboard.setStyle("-fx-font-size:15");
         viewScoreboard.setOnAction(actionEvent -> {
             stage.hide();
             showLeaderboard(stage);
@@ -198,6 +204,7 @@ public class Main extends Application {
 
         // reset game button
         Button playAgain = new Button("Play again");
+        playAgain.setStyle("-fx-font-size:15");
         playAgain.setOnAction(actionEvent -> {
             stage.close();
             gamePane.getChildren().clear();
@@ -206,7 +213,9 @@ public class Main extends Application {
 
         // display current and highest score
         Label currentScore = new Label("Your score: " + String.valueOf(scores.get(count)));
+        currentScore.setStyle("-fx-font-size:15");
         Label highScore = new Label("High score: " + String.valueOf(Collections.max(scores)));
+        highScore.setStyle("-fx-font-size:15");
         count++; // keep track of current score/element
 
         VBox vb = new VBox(currentScore, highScore, viewGraph, viewScoreboard, playAgain);
@@ -235,11 +244,15 @@ public class Main extends Application {
 
         // get score calculations
         Label avgScore = new Label("Mean score: " + String.format("%.2f", meanScores(scores)));
+        avgScore.setFont(new Font(15));
         Label minScore = new Label("Minimum score: " + Collections.min(scores));
+        minScore.setFont(new Font(15));
         Label maxScore = new Label("Maximum score: " + Collections.max(scores));
+        maxScore.setFont(new Font(15));
 
         // return to menu
         Button goBack = new Button("Menu");
+        goBack.setStyle("-fx-font-size:15");
         goBack.setOnAction(actionEvent -> {
             stage.close();
             menuStage.show();
@@ -277,8 +290,10 @@ public class Main extends Application {
     // show leaderboard
     public void showLeaderboard(Stage menuStage) {
         List<Integer> sortedNumbers = new ArrayList<>(scores);
-        Collections.sort(scores, Collections.reverseOrder());
+        Collections.sort(sortedNumbers, Collections.reverseOrder());
         Stage stage = new Stage();
+        Label title = new Label("Leaderboard");
+        title.setFont(new Font(20));
 
         GridPane gp = new GridPane();
         gp.setGridLinesVisible(true);
@@ -291,12 +306,20 @@ public class Main extends Application {
         for(int i = 0; i < 10; i++) {
             gp.add(new Label(String.valueOf(i+1) + ". "), 0, i);
         }
-        for(int i = 0; i < sortedNumbers.size(); i++) {
-            gp.add(new Label(" " + String.valueOf(sortedNumbers.get(i))), 1, i);
+        if(sortedNumbers.size() > 10) {
+            for (int i = 0; i < 10; i++) {
+                gp.add(new Label(" " + String.valueOf(sortedNumbers.get(i))), 1, i);
+            }
+        }
+        else {
+            for (int i = 0; i < sortedNumbers.size(); i++) {
+                gp.add(new Label(" " + String.valueOf(sortedNumbers.get(i))), 1, i);
+            }
         }
 
         // return to menu
         Button goBack = new Button("Menu");
+        goBack.setStyle("-fx-font-size:15");
         goBack.setOnAction(actionEvent -> {
             stage.close();
             menuStage.show();
@@ -304,7 +327,7 @@ public class Main extends Application {
 
         VBox vb = new VBox();
         vb.setAlignment(Pos.CENTER);
-        vb.getChildren().addAll(new Label("Leaderboard"), gp, goBack);
+        vb.getChildren().addAll(title, gp, goBack);
 
         Scene view = new Scene(vb, 200, 300);
         stage.setScene(view);
