@@ -11,7 +11,7 @@ The application currently has:
 
 ### Screenshots
 ![mainMenu](https://github.com/alexlo97/Space-Shooter/blob/master/screenshots/mainMenu.png)
-![game](https://github.com/alexlo97/Space-Shooter/blob/master/screenshots/mainMenu.png)
-![menu](https://github.com/alexlo97/Space-Shooter/blob/master/screenshots/mainMenu.png)
+![game](https://github.com/alexlo97/Space-Shooter/blob/master/screenshots/game.png)
+![menu](https://github.com/alexlo97/Space-Shooter/blob/master/screenshots/menu.png)
 ![chart](https://github.com/alexlo97/Space-Shooter/blob/master/screenshots/chart.png)
 ![leaderboard](https://github.com/alexlo97/Space-Shooter/blob/master/screenshots/leaderboard.png)
