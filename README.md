@@ -1,7 +1,7 @@
 ![gameDemo](https://github.com/alexlo97/Space-Shooter/blob/master/screenshots/gameDemo.gif)
 
 ## Space Shooter
-An implementation of the classic arcade game: Asteroids. Built with Java using the JavaFX library
+An implementation of the classic arcade game: Asteroids. Built with Java using the JavaFX library <br />
 The application currently has:
 - A main menu
 - The game
