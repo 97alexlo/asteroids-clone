@@ -27,6 +27,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        showMainMenu(stage);
+    }
+
+    public void showMainMenu(Stage stage) {
         stage.setTitle("Space Shooter");
         VBox vb = new VBox();
         Button playGame = new Button("Play");
@@ -63,6 +67,7 @@ public class Main extends Application {
     public void setGame(Pane pane, Stage stage, Scene scene) {
 
         Text text = new Text(10, 20, "Points: 0");
+        text.setFont(new Font(15));
         pane.getChildren().add(text);
         AtomicInteger points = new AtomicInteger();
 
@@ -146,7 +151,7 @@ public class Main extends Application {
                     });
                     // increment points when an asteroid is destroyed
                     if(!projectile.isAlive()) {
-                        text.setText("Points: " + points.addAndGet(1));
+                        text.setText("Points: " + points.addAndGet(1*10));
                     }
                 });
 
@@ -186,6 +191,14 @@ public class Main extends Application {
     public void showMenu(Pane gamePane, Stage gameStage, Scene gameScene) {
         Stage stage = new Stage();
 
+        // view main menu
+        Button viewMainMenu = new Button("Main Menu");
+        viewMainMenu.setStyle("-fx-font-size:15");
+        viewMainMenu.setOnAction(actionEvent -> {
+            stage.hide();
+            showMainMenu(stage);
+        });
+
         // view progress graph button
         Button viewGraph = new Button("Score Analysis Chart");
         viewGraph.setStyle("-fx-font-size:15");
@@ -218,11 +231,11 @@ public class Main extends Application {
         highScore.setStyle("-fx-font-size:15");
         count++; // keep track of current score/element
 
-        VBox vb = new VBox(currentScore, highScore, viewGraph, viewScoreboard, playAgain);
+        VBox vb = new VBox(currentScore, highScore, viewMainMenu, viewGraph, viewScoreboard, playAgain);
         vb.setAlignment(Pos.CENTER);
         vb.setPadding(new Insets(15));
         vb.setSpacing(10);
-        Scene scene = new Scene(vb, 320, 200);
+        Scene scene = new Scene(vb, 320, 240);
         stage.setScene(scene);
         stage.show();
     }
